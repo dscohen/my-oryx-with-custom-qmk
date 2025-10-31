@@ -268,23 +268,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-const uint16_t PROGMEM combo0[] = { KC_Y, KC_O, COMBO_END};
-const uint16_t PROGMEM combo1[] = { KC_O, KC_U, COMBO_END};
-const uint16_t PROGMEM combo2[] = { KC_K, KC_F, COMBO_END};
-const uint16_t PROGMEM combo3[] = { KC_F, KC_COMMA, COMBO_END};
-const uint16_t PROGMEM combo4[] = { KC_COMMA, KC_DOT, COMBO_END};
-const uint16_t PROGMEM combo5[] = { LT(1, KC_P), KC_H, COMBO_END};
-
-combo_t key_combos[COMBO_COUNT] = {
-    COMBO(combo0, KC_LPRN),
-    COMBO(combo1, KC_RPRN),
-    COMBO(combo2, KC_PLUS),
-    COMBO(combo3, KC_EQUAL),
-    COMBO(combo4, KC_ESCAPE),
-    COMBO(combo5, LCTL(KC_BSLS)),
-};
-
-
 
 
 extern bool set_scrolling;
