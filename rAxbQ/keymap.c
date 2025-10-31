@@ -356,7 +356,108 @@ tap_dance_action_t tap_dance_actions[] = {
         [DANCE_0] = ACTION_TAP_DANCE_FN_ADVANCED(on_dance_0, dance_0_finished, dance_0_reset),
 };
 
+#define TMUX_PREFIX SS_DOWN(X_LCTL) "a" SS_UP(X_LCTL)
+
+/// Handle events when on the TMUX layer
+static bool process_record_tmux(uint16_t keycode, keyrecord_t *record) {
+    if (!record->event.pressed) return true;
+    switch (keycode) {
+        case KC_SEAL:
+            SEND_STRING("The seal loves running to the store");
+            return false;
+        case _T_NEW_:
+            SEND_STRING(TMUX_PREFIX "c");
+            return false;
+        case _T_PREV:
+            SEND_STRING(TMUX_PREFIX "p");
+            return false;
+        case _T_LEFT:
+            SEND_STRING(TMUX_PREFIX SS_TAP(X_LEFT));
+            return false;
+        case _T_DOWN:
+            SEND_STRING(TMUX_PREFIX SS_TAP(X_DOWN));
+            return false;
+        case _T_UP__:
+            SEND_STRING(TMUX_PREFIX SS_TAP(X_UP));
+            return false;
+        case _T_RGHT:
+            SEND_STRING(TMUX_PREFIX SS_TAP(X_RIGHT));
+            return false;
+        case _T_NEXT:
+            SEND_STRING(TMUX_PREFIX "n");
+            return false;
+        case _T_KPAN:
+            SEND_STRING(TMUX_PREFIX "x");
+            return false;
+        case _T_VSPT:
+            SEND_STRING(TMUX_PREFIX "|");
+            return false;
+        case _T_HSPT:
+            SEND_STRING(TMUX_PREFIX "-");
+            return false;
+        case _T_LAST:
+            SEND_STRING(TMUX_PREFIX "l");
+            return false;
+        case _T_CMD_:
+            SEND_STRING(TMUX_PREFIX ":");
+            return false;
+        case _T_COPY:
+            SEND_STRING(TMUX_PREFIX "[");
+            return false;
+        case _T_PAST:
+            SEND_STRING(TMUX_PREFIX "]");
+            return false;
+        case _T_SCRL:
+            SEND_STRING(TMUX_PREFIX SS_TAP(X_PGUP));
+            return false;
+        case _T_MOVE:
+            SEND_STRING(TMUX_PREFIX ".");
+            return false;
+        case _T_RNAM:
+            SEND_STRING(TMUX_PREFIX ",");
+            return false;
+        case _T_BEGI:
+            SEND_STRING(TMUX_PREFIX TMUX_PREFIX);
+            return false;
+        case _T_1___:
+            SEND_STRING(TMUX_PREFIX "1");
+            return false;
+        case _T_2___:
+            SEND_STRING(TMUX_PREFIX "2");
+            return false;
+        case _T_3___:
+            SEND_STRING(TMUX_PREFIX "3");
+            return false;
+        case _T_4___:
+            SEND_STRING(TMUX_PREFIX "4");
+            return false;
+        case _T_5___:
+            SEND_STRING(TMUX_PREFIX "5");
+            return false;
+        case _T_6___:
+            SEND_STRING(TMUX_PREFIX "6");
+            return false;
+        case _T_7___:
+            SEND_STRING(TMUX_PREFIX "7");
+            return false;
+        case _T_8___:
+            SEND_STRING(TMUX_PREFIX "8");
+            return false;
+        case _T_9___:
+            SEND_STRING(TMUX_PREFIX "9");
+            return false;
+        case _T_0___:
+            SEND_STRING(TMUX_PREFIX "0");
+            return false;
+    }
+    return true;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (get_highest_layer(layer_state) == _TMUX) {
+    return process_record_tmux(keycode, record);
+  }
+
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX: 
     // Mouse keys with modifiers work inconsistently across operating systems, this makes sure that modifiers are always
