@@ -25,6 +25,7 @@ enum custom_keycodes {
   NAVIGATOR_DEC_CPI,
   NAVIGATOR_TURBO,
   NAVIGATOR_AIM,
+  SPACE_LAYER,           // Space with _HELPER layer on hold
     _T_NEW_,               // tmux new
     _T_PREV,               // tmux prev-window
     _T_NEXT,               // tmux next-window
@@ -229,7 +230,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CW_TOGG,                        KC_B,               KC_L,               KC_D,               KC_C,               KC_V,                   LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
     NAVIGATOR_TURBO,                KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),         LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               MT(MOD_RSFT, KC_QUOTE),
     NAVIGATOR_AIM,                  TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                   KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            KC_RIGHT_CTRL,
-                                                        OSM(MOD_LSFT),      LALT(KC_F),                                                 LT_HOLD_ON_OTHER_KEY_PRESS(_HELPER, KC_SPACE), KC_SPACE
+                                                        OSM(MOD_LSFT),      LALT(KC_F),                                                 SPACE_LAYER, KC_SPACE
   ),
 
   [_NUMS] = LAYOUT_voyager(
@@ -463,6 +464,16 @@ static bool process_record_tmux(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+// Custom tapping term for SPACE_LAYER - prioritize space over layer activation
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case SPACE_LAYER:
+      return 200;  // Full TAPPING_TERM to prioritize space
+    default:
+      return TAPPING_TERM;
+  }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (get_highest_layer(layer_state) == _TMUX) {
     return process_record_tmux(keycode, record);
@@ -536,6 +547,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case NAVIGATOR_DEC_CPI:
     if (record->event.pressed) {
         pointing_device_set_cpi(0);
+    }
+    return false;
+  case SPACE_LAYER:
+    if (record->event.pressed) {
+      // Check if this is a hold (held for full tapping term) or tap
+      if (record->tap.count == 0) {
+        // Held - activate layer
+        layer_on(_HELPER);
+      } else {
+        // Tapped - send space and keep layer active until release
+        tap_code(KC_SPACE);
+      }
+    } else {
+      // On release, turn off layer
+      layer_off(_HELPER);
     }
     return false;
     case RGB_SLD:
