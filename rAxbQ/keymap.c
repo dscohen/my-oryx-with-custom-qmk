@@ -234,7 +234,7 @@ int accumulated_arrow_y = 0;
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ALPHA] = LAYOUT_voyager(
     DUAL_FUNC_0,            KC_1,               NAVIGATOR_TURBO,    TOGGLE_SCROLL,      KC_MS_BTN1,         KC_5,                                         KC_MS_BTN1,         KC_7,               KC_8,               KC_9,               KC_0,               KC_MINUS,
-    CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               KC_V,                                         LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
+    CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               LT(_MOUSE,KC_V),                                         LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
     KC_B,                   KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),                               LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               MT(MOD_RSFT, KC_QUOTE),
     NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                                         KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            KC_RIGHT_CTRL,
                                                 OSM(MOD_LSFT),      LALT(KC_F),                                                                       KC_SPACE,           KC_SPACE
