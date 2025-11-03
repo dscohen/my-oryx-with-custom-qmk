@@ -484,42 +484,41 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 // Convert rollerball movement to arrow keys on mouse layer
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-  if (arrow_mode_active) {
-    // Accumulate movement in dominant direction to prevent accidental orthogonal presses
-    // Bias towards vertical (prefer up/down over left/right)
-    if (abs(mouse_report.x) > abs(mouse_report.y)) {
-      // Horizontal movement is dominant
-      accumulated_arrow_x += mouse_report.x;
-      accumulated_arrow_y = 0;  // Reset vertical accumulation
-    } else if (abs(mouse_report.y) > abs(mouse_report.x)) {
-      // Vertical movement is dominant
-      accumulated_arrow_x = 0;  // Reset horizontal accumulation
-      accumulated_arrow_y += mouse_report.y;
-    }
-    // If equal, keep previous dominant direction by not changing accumulated values
-
-    // Send arrow keys when threshold is reached
-    if (accumulated_arrow_x <= -ARROW_STEP) {
-      tap_code(KC_LEFT);
-      accumulated_arrow_x += ARROW_STEP;
-    }
-    if (accumulated_arrow_x >= ARROW_STEP) {
-      tap_code(KC_RIGHT);
-      accumulated_arrow_x -= ARROW_STEP;
-    }
-    if (accumulated_arrow_y <= -ARROW_STEP) {
-      tap_code(KC_UP);
-      accumulated_arrow_y += ARROW_STEP;
-    }
-    if (accumulated_arrow_y >= ARROW_STEP) {
-      tap_code(KC_DOWN);
-      accumulated_arrow_y -= ARROW_STEP;
-    }
-
-    // Return null report (don't send mouse movement, only arrow keys)
-    mouse_report.x = 0;
-    mouse_report.y = 0;
+  // Always convert rollerball movement to arrows
+  // Accumulate movement in dominant direction to prevent accidental orthogonal presses
+  // Bias towards vertical (prefer up/down over left/right)
+  if (abs(mouse_report.x) > abs(mouse_report.y)) {
+    // Horizontal movement is dominant
+    accumulated_arrow_x += mouse_report.x;
+    accumulated_arrow_y = 0;  // Reset vertical accumulation
+  } else if (abs(mouse_report.y) > abs(mouse_report.x)) {
+    // Vertical movement is dominant
+    accumulated_arrow_x = 0;  // Reset horizontal accumulation
+    accumulated_arrow_y += mouse_report.y;
   }
+  // If equal, keep previous dominant direction by not changing accumulated values
+
+  // Send arrow keys when threshold is reached
+  if (accumulated_arrow_x <= -ARROW_STEP) {
+    tap_code(KC_LEFT);
+    accumulated_arrow_x += ARROW_STEP;
+  }
+  if (accumulated_arrow_x >= ARROW_STEP) {
+    tap_code(KC_RIGHT);
+    accumulated_arrow_x -= ARROW_STEP;
+  }
+  if (accumulated_arrow_y <= -ARROW_STEP) {
+    tap_code(KC_UP);
+    accumulated_arrow_y += ARROW_STEP;
+  }
+  if (accumulated_arrow_y >= ARROW_STEP) {
+    tap_code(KC_DOWN);
+    accumulated_arrow_y -= ARROW_STEP;
+  }
+
+  // Return null report (don't send mouse movement, only arrow keys)
+  mouse_report.x = 0;
+  mouse_report.y = 0;
 
   return mouse_report;
 }
