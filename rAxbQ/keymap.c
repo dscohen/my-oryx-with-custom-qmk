@@ -231,7 +231,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               LT(_MOUSE,KC_V),                                         LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
     KC_B,                   KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),                               LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               MT(MOD_RSFT, KC_QUOTE),
     NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                                         KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            KC_RIGHT_CTRL,
-                                                OSM(MOD_LSFT),      LALT(KC_F),                                                                       LT(_HELPER, KC_SPACE),           KC_SPACE
+                                                OSM(MOD_LSFT),      MO(_MOUSE),                                                                       LT(_HELPER, KC_SPACE),           KC_SPACE
   ),
 
   [_NUMS] = LAYOUT_voyager(
@@ -261,7 +261,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_MOUSE] = LAYOUT_voyager(
     KC_TRNS,                KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,                                      KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,
     KC_TRNS,                KC_MS_UP,           KC_MS_WH_UP,        KC_MS_WH_LEFT,      KC_MS_WH_DOWN,      KC_MS_WH_RIGHT,                               KC_TRNS,            KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
-    KC_TRNS,                KC_N,               KC_R,               KC_T,               KC_S,               MO(_NAV),                                     KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
+    KC_TRNS,                KC_N,               KC_R,               KC_T,               LCTL(KC_ENT),               MO(_NAV),                                     KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
     KC_TRNS,                KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,                                   KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
                                                 KC_TRNS,            KC_TRNS,                                                                          KC_TRNS,            KC_TRNS
   ),
