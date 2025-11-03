@@ -229,15 +229,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ALPHA] = LAYOUT_voyager(
     DUAL_FUNC_0,            KC_1,               NAVIGATOR_TURBO,    TOGGLE_SCROLL,      KC_MS_BTN1,         KC_5,                                         KC_MS_BTN1,         KC_7,               KC_8,               KC_9,               KC_0,               KC_MINUS,
     CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               LT(_MOUSE,KC_V),                                         LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
-    KC_B,                   KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),                               LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               MT(MOD_RSFT, KC_QUOTE),
-    NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                                         KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            KC_RIGHT_CTRL,
+    KC_B,                   KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),                               LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               KC_RIGHT_CTRL,
+    NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                                         KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            OSM(MOD_LCTL),
                                                 OSM(MOD_LSFT),      MO(_MOUSE),                                                                       LT(_HELPER, KC_SPACE),           KC_SPACE
   ),
 
   [_NUMS] = LAYOUT_voyager(
     KC_TRNS,                KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,                                      KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,
-    KC_TRNS,                KC_5,               KC_6,               KC_7,               KC_8,               KC_9,                                         KC_0,               KC_1,               KC_2,               KC_3,               KC_4,               KC_TRNS,
-    KC_TRNS,                KC_0,               KC_1,               KC_2,               KC_3,               LT(_NAV,KC_4),                                KC_TRNS,            KC_LGUI,            KC_LCTL,            KC_LSFT,            KC_9,               KC_TRNS,
+    KC_LSFT,                KC_5,               KC_6,               KC_7,               KC_8,               KC_9,                                         KC_0,               KC_1,               KC_2,               KC_3,               KC_4,               KC_TRNS,
+    KC_5,                   KC_0,               KC_1,               KC_2,               KC_3,               LT(_NAV,KC_4),                                KC_TRNS,            KC_LGUI,            KC_LCTL,            KC_LSFT,            KC_9,               KC_TRNS,
     KC_TRNS,                NAVIGATOR_INC_CPI, NAVIGATOR_DEC_CPI,  KC_LBRC,            KC_RBRC,            KC_BTN1,                                      KC_AMPR,            KC_LCTL,            KC_COMM,            KC_DOT,             KC_MINS,            KC_TRNS,
                                                 KC_TRNS,            KC_TRNS,                                                                          KC_TRNS,            KC_TRNS
   ),
