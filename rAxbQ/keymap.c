@@ -483,18 +483,21 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 }
 
 // Convert rollerball movement to arrow keys on mouse layer
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
+  // The Voyager has a right-side rollerball - use right_report
+  report_mouse_t combined = pointing_device_combine_reports(left_report, right_report);
+
   // Always convert rollerball movement to arrows
   // Accumulate movement in dominant direction to prevent accidental orthogonal presses
   // Bias towards vertical (prefer up/down over left/right)
-  if (abs(mouse_report.x) > abs(mouse_report.y)) {
+  if (abs(combined.x) > abs(combined.y)) {
     // Horizontal movement is dominant
-    accumulated_arrow_x += mouse_report.x;
+    accumulated_arrow_x += combined.x;
     accumulated_arrow_y = 0;  // Reset vertical accumulation
-  } else if (abs(mouse_report.y) > abs(mouse_report.x)) {
+  } else if (abs(combined.y) > abs(combined.x)) {
     // Vertical movement is dominant
     accumulated_arrow_x = 0;  // Reset horizontal accumulation
-    accumulated_arrow_y += mouse_report.y;
+    accumulated_arrow_y += combined.y;
   }
   // If equal, keep previous dominant direction by not changing accumulated values
 
@@ -517,10 +520,10 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
   }
 
   // Return null report (don't send mouse movement, only arrow keys)
-  mouse_report.x = 0;
-  mouse_report.y = 0;
+  combined.x = 0;
+  combined.y = 0;
 
-  return mouse_report;
+  return combined;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
