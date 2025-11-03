@@ -229,6 +229,7 @@ enum tap_dance_codes {
 
 int accumulated_arrow_x = 0;
 int accumulated_arrow_y = 0;
+bool arrow_mode_active = false;
 
 // Keymaps
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -483,7 +484,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 
 // Convert rollerball movement to arrow keys on mouse layer
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-  if (get_highest_layer(layer_state) == _MOUSE) {
+  if (arrow_mode_active) {
     // Accumulate movement in dominant direction to prevent accidental orthogonal presses
     // Bias towards vertical (prefer up/down over left/right)
     if (abs(mouse_report.x) > abs(mouse_report.y)) {
@@ -637,5 +638,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
   }
+
+  // Track when Z key (LT(_MOUSE,KC_Z)) is held for arrow mode
+  if (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX) {
+    uint8_t layer = (keycode >> 8) & 0xFF;
+    if (layer == _MOUSE) {
+      if (record->event.pressed) {
+        arrow_mode_active = true;
+      } else {
+        arrow_mode_active = false;
+      }
+    }
+  }
+
   return true;
 }
