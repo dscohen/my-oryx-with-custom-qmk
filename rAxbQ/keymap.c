@@ -224,13 +224,6 @@ enum tap_dance_codes {
 
 #define DUAL_FUNC_0 LT(14, KC_F7)
 
-// Mouse layer arrow key config
-#define ARROW_STEP 20
-
-int accumulated_arrow_x = 0;
-int accumulated_arrow_y = 0;
-bool arrow_mode_active = false;
-
 // Keymaps
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ALPHA] = LAYOUT_voyager(
@@ -482,50 +475,6 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-// Convert rollerball movement to arrow keys on mouse layer
-report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-  // The Voyager has a right-side rollerball - use right_report
-  report_mouse_t combined = pointing_device_combine_reports(left_report, right_report);
-
-  // Always convert rollerball movement to arrows
-  // Accumulate movement in dominant direction to prevent accidental orthogonal presses
-  // Bias towards vertical (prefer up/down over left/right)
-  if (abs(combined.x) > abs(combined.y)) {
-    // Horizontal movement is dominant
-    accumulated_arrow_x += combined.x;
-    accumulated_arrow_y = 0;  // Reset vertical accumulation
-  } else if (abs(combined.y) > abs(combined.x)) {
-    // Vertical movement is dominant
-    accumulated_arrow_x = 0;  // Reset horizontal accumulation
-    accumulated_arrow_y += combined.y;
-  }
-  // If equal, keep previous dominant direction by not changing accumulated values
-
-  // Send arrow keys when threshold is reached
-  if (accumulated_arrow_x <= -ARROW_STEP) {
-    tap_code(KC_LEFT);
-    accumulated_arrow_x += ARROW_STEP;
-  }
-  if (accumulated_arrow_x >= ARROW_STEP) {
-    tap_code(KC_RIGHT);
-    accumulated_arrow_x -= ARROW_STEP;
-  }
-  if (accumulated_arrow_y <= -ARROW_STEP) {
-    tap_code(KC_UP);
-    accumulated_arrow_y += ARROW_STEP;
-  }
-  if (accumulated_arrow_y >= ARROW_STEP) {
-    tap_code(KC_DOWN);
-    accumulated_arrow_y -= ARROW_STEP;
-  }
-
-  // Return null report (don't send mouse movement, only arrow keys)
-  combined.x = 0;
-  combined.y = 0;
-
-  return combined;
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (get_highest_layer(layer_state) == _TMUX) {
     return process_record_tmux(keycode, record);
@@ -640,16 +589,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
   }
-
-  // Track mouse button presses to enable arrow mode
-  // When using mouse buttons, convert rollerball movement to arrows
-  if (IS_MOUSE_KEYCODE(keycode)) {
-    if (record->event.pressed) {
-      arrow_mode_active = true;
-    } else {
-      arrow_mode_active = false;
-    }
-  }
-
   return true;
 }
