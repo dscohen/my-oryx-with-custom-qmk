@@ -224,6 +224,52 @@ enum tap_dance_codes {
 
 #define DUAL_FUNC_0 LT(14, KC_F7)
 
+// ============================================================================
+// Combo Timing Buckets
+// ============================================================================
+// Define timing buckets for groups of combos with similar timing requirements
+// Each bucket can have a different timeout value (in milliseconds)
+
+enum combo_timing_buckets {
+    TIMING_DEFAULT = 0,   // 50ms (or whatever COMBO_TERM is set to in config.h)
+    TIMING_FAST = 1,      // 40ms - for combos that need to fire quickly
+    TIMING_SLOW = 2,      // 120ms - for combos that benefit from longer window
+};
+
+// Map each combo to its timing bucket
+// Any combo not listed here will use TIMING_DEFAULT
+// Format: [COMBO_NAME] = TIMING_BUCKET
+static const uint8_t combo_timing_map[COMBO_COUNT] = {
+    // Fast timing (40ms) - combos that fire quickly
+    [COMBO_TAB_FORWARD] = TIMING_FAST,
+    [COMBO_TAB_BACKWARD] = TIMING_FAST,
+    [COMBO_ESC] = TIMING_FAST,
+
+    // Slow timing (120ms) - combos that benefit from longer detection window
+    [COMBO_ITERM] = TIMING_SLOW,
+    [COMBO_COPY] = TIMING_SLOW,
+    [COMBO_PASTE] = TIMING_SLOW,
+    [COMBO_ALFRED] = TIMING_SLOW,
+
+    // All others default to TIMING_DEFAULT (50ms)
+};
+
+// Define the actual timeout values (in ms) for each bucket
+static const uint16_t combo_timing_values[] = {
+    [TIMING_DEFAULT] = 50,   // Default QMK combo term
+    [TIMING_FAST] = 40,      // Faster detection for quick combos
+    [TIMING_SLOW] = 120,     // Slower detection for deliberate combos
+};
+
+// Custom get_combo_term implementation to support per-combo timing
+uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
+    if (combo_index < COMBO_COUNT) {
+        uint8_t bucket = combo_timing_map[combo_index];
+        return combo_timing_values[bucket];
+    }
+    return COMBO_TERM;  // Fallback to default if index out of range
+}
+
 // Keymaps
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ALPHA] = LAYOUT_voyager(
