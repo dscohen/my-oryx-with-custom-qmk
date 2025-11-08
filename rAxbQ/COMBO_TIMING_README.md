@@ -280,6 +280,47 @@ Combos defined in `keymap.c`:
 
 See `enum custom_keycodes` (line 17) and `enum combos` (line 63) for the complete list.
 
+## Advanced: Fine-Tuning Vertical Combos by Column
+
+Different columns on your keyboard might benefit from different vertical timings. For example, you might want faster detection on one side than the other:
+
+```c
+enum combo_timing_buckets {
+    TIMING_DEFAULT = 0,
+    TIMING_FAST = 1,
+    TIMING_SLOW = 2,
+    TIMING_VERTICAL = 3,
+    TIMING_VERTICAL_LEFT = 4,   // Separate timing for left-side verticals
+    TIMING_VERTICAL_RIGHT = 5,  // Separate timing for right-side verticals
+};
+
+static const uint16_t combo_timing_values[] = {
+    [TIMING_DEFAULT] = 50,
+    [TIMING_FAST] = 40,
+    [TIMING_SLOW] = 120,
+    [TIMING_VERTICAL] = 80,
+    [TIMING_VERTICAL_LEFT] = 70,   // Faster for left side
+    [TIMING_VERTICAL_RIGHT] = 90,  // Slower for right side
+};
+
+static const uint8_t combo_timing_map[COMBO_COUNT] = {
+    // Left-side verticals
+    [COMBO_SK_LGUI] = TIMING_VERTICAL_LEFT,
+    [COMBO_TAB_BACKWARD] = TIMING_VERTICAL_LEFT,
+    [COMBO_QSTN] = TIMING_VERTICAL_LEFT,
+    [COMBO_EXCLM] = TIMING_VERTICAL_LEFT,
+
+    // Right-side verticals
+    [COMBO_SK_RGUI] = TIMING_VERTICAL_RIGHT,
+    [COMBO_COLON] = TIMING_VERTICAL_RIGHT,
+    [COMBO_ALFRED] = TIMING_VERTICAL_RIGHT,
+    [COMBO_FSLASH] = TIMING_VERTICAL_RIGHT,
+    // ... more mappings
+};
+```
+
+This is useful if you notice one side of your keyboard naturally types faster than the other.
+
 ## Advanced: Creating a Modifier-Specific Bucket
 
 For combos with multiple modifier keys, you might want slower detection:
@@ -288,13 +329,15 @@ For combos with multiple modifier keys, you might want slower detection:
 enum combo_timing_buckets {
     TIMING_DEFAULT = 0,
     TIMING_FAST = 1,
-    TIMING_MOD_COMBOS = 2,  // For modifier combos
-    TIMING_SLOW = 3,
+    TIMING_VERTICAL = 2,
+    TIMING_MOD_COMBOS = 3,  // For modifier combos
+    TIMING_SLOW = 4,
 };
 
 static const uint16_t combo_timing_values[] = {
     [TIMING_DEFAULT] = 50,
     [TIMING_FAST] = 40,
+    [TIMING_VERTICAL] = 80,
     [TIMING_MOD_COMBOS] = 100,  // Longer window for modifier combos
     [TIMING_SLOW] = 120,
 };
@@ -303,9 +346,12 @@ static const uint8_t combo_timing_map[COMBO_COUNT] = {
     [COMBO_SK_ALT] = TIMING_MOD_COMBOS,
     [COMBO_SK_CTRL] = TIMING_MOD_COMBOS,
     [COMBO_SK_LGUI] = TIMING_MOD_COMBOS,
+    [COMBO_SK_RGUI] = TIMING_MOD_COMBOS,
     // ... other mappings
 };
 ```
+
+Note: `SK_LGUI` and `SK_RGUI` are both vertical combos, so you could also use `TIMING_VERTICAL` for them if that works better.
 
 ## Need Help?
 
