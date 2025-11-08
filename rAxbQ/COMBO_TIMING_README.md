@@ -17,10 +17,11 @@ enum combo_timing_buckets {
     TIMING_DEFAULT = 0,   // 50ms (or whatever COMBO_TERM is in config.h)
     TIMING_FAST = 1,      // 40ms - for quick-fire combos
     TIMING_SLOW = 2,      // 120ms - for deliberate combos
+    TIMING_VERTICAL = 3,  // 80ms - for vertical combos (same column, adjacent rows)
 };
 ```
 
-Each bucket needs a unique numeric ID (0, 1, 2, etc.).
+Each bucket needs a unique numeric ID (0, 1, 2, 3, etc.).
 
 ### 2. Set Bucket Timing Values
 
@@ -28,9 +29,10 @@ Define the actual millisecond values for each bucket:
 
 ```c
 static const uint16_t combo_timing_values[] = {
-    [TIMING_DEFAULT] = 50,    // Default QMK combo term
-    [TIMING_FAST] = 40,       // Faster detection
-    [TIMING_SLOW] = 120,      // Slower detection
+    [TIMING_DEFAULT] = 50,     // Default QMK combo term
+    [TIMING_FAST] = 40,        // Faster detection for quick combos
+    [TIMING_SLOW] = 120,       // Slower detection for deliberate combos
+    [TIMING_VERTICAL] = 80,    // Balanced timing for vertical combos
 };
 ```
 
@@ -57,7 +59,58 @@ static const uint8_t combo_timing_map[COMBO_COUNT] = {
 
 **Note:** Any combo not listed in `combo_timing_map[]` will automatically use `TIMING_DEFAULT`.
 
+## Vertical Combos Explained
+
+Vertical combos are key pairs where both keys are in the **same column** but **different rows** (stacked vertically). They're physically easier to press simultaneously because your fingers move naturally up and down.
+
+### Why Vertical Combos Need Special Timing
+
+**Vertical combos have unique timing characteristics:**
+- **Easier to trigger:** Your fingers naturally move in the same column, making them easier to press together
+- **Higher false positive risk:** If you're typing adjacent keys in the same column quickly, you might accidentally trigger a combo
+- **Benefits from longer window:** A slightly longer timeout (80ms) helps catch intentional presses while filtering out accidental ones
+
+### Vertical Combos in rAxbQ
+
+**Left side vertical combos:**
+- `COMBO_SK_LGUI`: KC_D ↔ KC_T (column 3)
+- `COMBO_TAB_BACKWARD`: KC_T ↔ KC_M (column 3)
+- `COMBO_QSTN`: KC_L ↔ KC_R (column 2)
+- `COMBO_EXCLM`: KC_R ↔ KC_X (column 2)
+- `COMBO_MEH_LAYER` / `COMBO_MEH`: KC_C ↔ KC_S (column 4)
+- `COMBO_TAB_FORWARD`: KC_S ↔ KC_W (column 4)
+- `COMBO_SEMICOLON`: KC_V ↔ KC_G (column 5)
+- `COMBO_PIPE`: KC_G ↔ KC_J (column 5)
+
+**Right side vertical combos:**
+- `COMBO_SK_RGUI`: KC_O ↔ KC_A (column 2)
+- `COMBO_COLON`: KC_A ↔ KC_COMM (column 2)
+- `COMBO_ALFRED`: KC_Y ↔ KC_H (column 1)
+- `COMBO_FSLASH`: KC_H ↔ KC_F (column 1)
+- `COMBO_HASH`: KC_U ↔ KC_E (column 3)
+- `COMBO_PERCENT`: KC_E ↔ KC_DOT (column 3)
+
+All vertical combos are pre-configured with `TIMING_VERTICAL` (80ms) for optimal detection.
+
 ## Examples
+
+### Adjusting Vertical Combo Timing
+
+If your vertical combos feel sluggish, reduce the timing:
+
+```c
+static const uint16_t combo_timing_values[] = {
+    [TIMING_VERTICAL] = 60,  // Faster - from 80ms to 60ms
+};
+```
+
+If they trigger too easily (false positives), increase it:
+
+```c
+static const uint16_t combo_timing_values[] = {
+    [TIMING_VERTICAL] = 100,  // Slower - from 80ms to 100ms
+};
+```
 
 ### Adding a New Timing Bucket
 
@@ -67,20 +120,22 @@ Say you want a "very fast" bucket for 30ms combos:
 enum combo_timing_buckets {
     TIMING_DEFAULT = 0,
     TIMING_FAST = 1,
-    TIMING_VERY_FAST = 2,  // New bucket
-    TIMING_SLOW = 3,       // Adjusted ID
+    TIMING_SLOW = 2,
+    TIMING_VERTICAL = 3,
+    TIMING_VERY_FAST = 4,     // New bucket
 };
 
 static const uint16_t combo_timing_values[] = {
     [TIMING_DEFAULT] = 50,
     [TIMING_FAST] = 40,
-    [TIMING_VERY_FAST] = 30,  // New timing value
     [TIMING_SLOW] = 120,
+    [TIMING_VERTICAL] = 80,
+    [TIMING_VERY_FAST] = 30,  // New timing value
 };
 
 static const uint8_t combo_timing_map[COMBO_COUNT] = {
     [COMBO_ESC] = TIMING_VERY_FAST,  // Use new bucket
-    [COMBO_TAB_FORWARD] = TIMING_FAST,
+    [COMBO_TAB_FORWARD] = TIMING_VERTICAL,
     [COMBO_COPY] = TIMING_SLOW,
 };
 ```
@@ -158,9 +213,10 @@ static const uint16_t combo_timing_values[] = {
     [TIMING_DEFAULT] = 40,
     [TIMING_FAST] = 30,
     [TIMING_SLOW] = 80,
+    [TIMING_VERTICAL] = 60,  // Faster vertical detection
 };
 ```
-Good for fast typists who press keys nearly simultaneously.
+Good for fast typists who press keys nearly simultaneously. Vertical combos fire quickly to match typing speed.
 
 ### Conservative/Low-Sensitivity Setup
 ```c
@@ -168,9 +224,10 @@ static const uint16_t combo_timing_values[] = {
     [TIMING_DEFAULT] = 70,
     [TIMING_FAST] = 50,
     [TIMING_SLOW] = 150,
+    [TIMING_VERTICAL] = 100,  // Slower vertical detection
 };
 ```
-Good for preventing accidental combos and supporting slower keypresses.
+Good for preventing accidental combos and supporting slower keypresses. Vertical combos have a longer window to prevent false positives.
 
 ### Balanced Setup (Current Default)
 ```c
@@ -178,9 +235,10 @@ static const uint16_t combo_timing_values[] = {
     [TIMING_DEFAULT] = 50,
     [TIMING_FAST] = 40,
     [TIMING_SLOW] = 120,
+    [TIMING_VERTICAL] = 80,   // Balanced vertical detection
 };
 ```
-Good middle ground for most users.
+Good middle ground for most users. Vertical combos are neither too quick nor too slow.
 
 ## Troubleshooting
 

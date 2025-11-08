@@ -234,31 +234,53 @@ enum combo_timing_buckets {
     TIMING_DEFAULT = 0,   // 50ms (or whatever COMBO_TERM is set to in config.h)
     TIMING_FAST = 1,      // 40ms - for combos that need to fire quickly
     TIMING_SLOW = 2,      // 120ms - for combos that benefit from longer window
+    TIMING_VERTICAL = 3,  // 80ms - for vertical combos (adjacent rows, same column)
 };
 
 // Map each combo to its timing bucket
 // Any combo not listed here will use TIMING_DEFAULT
 // Format: [COMBO_NAME] = TIMING_BUCKET
+//
+// VERTICAL COMBOS (adjacent keys in same column, different rows):
+// These combos have keys stacked vertically on the keyboard, making them
+// easier to press but requiring careful timing to avoid accidental triggers.
+// Left side verticals: KC_D↔KC_T, KC_L↔KC_R, KC_R↔KC_X, KC_C↔KC_S, KC_S↔KC_W, V↔G, G↔J
+// Right side verticals: KC_O↔KC_A, KC_A↔COMM, KC_Y↔KC_H, KC_H↔KC_F, KC_U↔KC_E, KC_E↔DOT
 static const uint8_t combo_timing_map[COMBO_COUNT] = {
-    // Fast timing (40ms) - combos that fire quickly
-    [COMBO_TAB_FORWARD] = TIMING_FAST,
-    [COMBO_TAB_BACKWARD] = TIMING_FAST,
+    // Vertical timing (80ms) - easier to press, needs balanced detection
+    [COMBO_TAB_FORWARD] = TIMING_VERTICAL,    // KC_S ↔ KC_W (left col 4)
+    [COMBO_TAB_BACKWARD] = TIMING_VERTICAL,   // KC_T ↔ KC_M (left col 3)
+    [COMBO_SK_LGUI] = TIMING_VERTICAL,        // KC_D ↔ KC_T (left col 3)
+    [COMBO_SK_RGUI] = TIMING_VERTICAL,        // KC_O ↔ KC_A (right col 2)
+    [COMBO_COLON] = TIMING_VERTICAL,          // KC_A ↔ KC_COMM (right col 2)
+    [COMBO_MEH_LAYER] = TIMING_VERTICAL,      // KC_C ↔ KC_S (left col 4)
+    [COMBO_ALFRED] = TIMING_VERTICAL,         // KC_Y ↔ KC_H (right col 1)
+    [COMBO_QSTN] = TIMING_VERTICAL,           // KC_L ↔ KC_R (left col 2)
+    [COMBO_EXCLM] = TIMING_VERTICAL,          // KC_R ↔ KC_X (left col 2)
+    [COMBO_HASH] = TIMING_VERTICAL,           // KC_U ↔ KC_E (right col 3)
+    [COMBO_FSLASH] = TIMING_VERTICAL,         // KC_H ↔ KC_F (right col 1)
+    [COMBO_PERCENT] = TIMING_VERTICAL,        // KC_E ↔ KC_DOT (right col 3)
+    [COMBO_SEMICOLON] = TIMING_VERTICAL,      // KC_V ↔ KC_G (left col 5)
+    [COMBO_PIPE] = TIMING_VERTICAL,           // KC_G ↔ KC_J (left col 5)
+    [COMBO_MEH] = TIMING_VERTICAL,            // KC_C ↔ KC_S (left col 4) - duplicate of MEH_LAYER
+
+    // Fast timing (40ms) - other quick-fire combos
     [COMBO_ESC] = TIMING_FAST,
 
-    // Slow timing (120ms) - combos that benefit from longer detection window
+    // Slow timing (120ms) - deliberate combos that benefit from longer window
     [COMBO_ITERM] = TIMING_SLOW,
     [COMBO_COPY] = TIMING_SLOW,
     [COMBO_PASTE] = TIMING_SLOW,
-    [COMBO_ALFRED] = TIMING_SLOW,
 
     // All others default to TIMING_DEFAULT (50ms)
 };
 
 // Define the actual timeout values (in ms) for each bucket
 static const uint16_t combo_timing_values[] = {
-    [TIMING_DEFAULT] = 50,   // Default QMK combo term
-    [TIMING_FAST] = 40,      // Faster detection for quick combos
-    [TIMING_SLOW] = 120,     // Slower detection for deliberate combos
+    [TIMING_DEFAULT] = 50,     // Default QMK combo term
+    [TIMING_FAST] = 40,        // Faster detection for quick combos
+    [TIMING_SLOW] = 120,       // Slower detection for deliberate combos
+    [TIMING_VERTICAL] = 80,    // Balanced timing for vertical combos
 };
 
 // Custom get_combo_term implementation to support per-combo timing
