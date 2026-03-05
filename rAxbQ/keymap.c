@@ -56,6 +56,8 @@ enum custom_keycodes {
     _T_0___,               // tmux select-window -t 0
     _ITERM_,               // tmux select-window -t 0
     KC_SEAL,
+    _CD_UP_,               // cd ..
+    _LS_CMD_,              // ls -htlr
 };
 
 
@@ -111,6 +113,8 @@ COMBO_TMUX,
 COMBO_NUM_BS,
 COMBO_NUM_LMOUSE,
 COMBO_TURBO,
+COMBO_CD_UP,
+COMBO_LS_CMD,
 };
 
 const uint16_t PROGMEM combo_tab_forward[] = {KC_S, KC_W, COMBO_END};
@@ -134,7 +138,7 @@ const uint16_t PROGMEM combo_copy[] = {KC_X, KC_W, COMBO_END};
 const uint16_t PROGMEM combo_alfred[] = {KC_Y, KC_H, COMBO_END};
 const uint16_t PROGMEM combo_paste[] = {KC_X, KC_M, KC_W, COMBO_END};
 const uint16_t PROGMEM combo_lbrc[] = {KC_D, KC_C, COMBO_END};
-const uint16_t PROGMEM combo_rbrc[] = {KC_C, KC_V, COMBO_END};
+const uint16_t PROGMEM combo_rbrc[] = {KC_C, LT(_MOUSE,KC_V), COMBO_END};
 const uint16_t PROGMEM combo_rprn[] = {KC_Y, KC_O, COMBO_END};
 const uint16_t PROGMEM combo_lbrn[] = {KC_O, KC_U, COMBO_END};
 const uint16_t PROGMEM combo_qstn[] = {KC_L, KC_R, COMBO_END};
@@ -163,6 +167,8 @@ const uint16_t PROGMEM combo_tmux[] = {KC_L, KC_D, KC_C, COMBO_END};
 const uint16_t PROGMEM combo_num_bs[] = {KC_1, KC_2, COMBO_END};
 const uint16_t PROGMEM combo_num_lmouse[] = {KC_2, KC_3, COMBO_END};
 const uint16_t PROGMEM combo_turbo[] = {KC_X, KC_M, COMBO_END};
+const uint16_t PROGMEM combo_cd_up[] = {KC_H, KC_O, COMBO_END};
+const uint16_t PROGMEM combo_ls_cmd[] = {KC_E, KC_O, COMBO_END};
 
 combo_t key_combos[] = {
 [COMBO_TAB_FORWARD] = COMBO(combo_tab_forward, LCTL(KC_TAB)),
@@ -178,7 +184,7 @@ combo_t key_combos[] = {
 [COMBO_SEAL] = COMBO(combo_seal, KC_S),
 [COMBO_REPEAT] = COMBO(combo_repeat, KC_ENT),
 [COMBO_SK_LGUI] = COMBO(combo_sk_lgui, OSM(MOD_LGUI)),
-[COMBO_SK_RGUI] = COMBO(combo_sk_rgui, OSM(MOD_RGUI)),
+[COMBO_SK_RGUI] = COMBO(combo_sk_rgui, KC_LGUI),
 [COMBO_TAB] = COMBO(combo_tab, KC_TAB),
 [COMBO_COLON] = COMBO(combo_colon, KC_COLN) ,
 [COMBO_MEH_LAYER] = COMBO(combo_meh_layer, OSM(MOD_MEH)),
@@ -215,6 +221,8 @@ combo_t key_combos[] = {
 [COMBO_NUM_BS] = COMBO(combo_num_bs, KC_BSPC),
 [COMBO_NUM_LMOUSE] = COMBO(combo_num_lmouse, KC_BTN1),
 [COMBO_TURBO] = COMBO(combo_turbo, NAVIGATOR_TURBO),
+[COMBO_CD_UP] = COMBO(combo_cd_up, _CD_UP_),
+[COMBO_LS_CMD] = COMBO(combo_ls_cmd, _LS_CMD_),
 };
 
 
@@ -271,6 +279,7 @@ static const uint8_t combo_timing_map[COMBO_COUNT] = {
     [COMBO_ITERM] = TIMING_SLOW,
     [COMBO_COPY] = TIMING_SLOW,
     [COMBO_PASTE] = TIMING_SLOW,
+    [COMBO_CD_UP] = TIMING_VERTICAL,          // KC_H ↔ KC_O (right col 1)
 
     // All others default to TIMING_DEFAULT (50ms)
 };
@@ -616,6 +625,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case NAVIGATOR_DEC_CPI:
     if (record->event.pressed) {
         pointing_device_set_cpi(0);
+    }
+    return false;
+  case _CD_UP_:
+    if (record->event.pressed) {
+        SEND_STRING("cd .." SS_TAP(X_ENTER));
+    }
+    return false;
+  case _LS_CMD_:
+    if (record->event.pressed) {
+        SEND_STRING("ls -htlr" SS_TAP(X_ENTER));
     }
     return false;
   case SPACE_LAYER:
