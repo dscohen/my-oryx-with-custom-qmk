@@ -119,7 +119,7 @@ const uint16_t PROGMEM combo_sk_alt[] = {KC_L, KC_D, COMBO_END};
 const uint16_t PROGMEM combo_iterm[] = {LT(_NUMS, KC_P), KC_H, COMBO_END};
 const uint16_t PROGMEM combo_sk_ctrl[] = {KC_X, KC_M, COMBO_END};
 const uint16_t PROGMEM combo_norm_ctrl[] = {KC_F, KC_COMM, KC_DOT, COMBO_END};
-const uint16_t PROGMEM combo_backslash[] = {LT(_MOUSE,KC_Z), KC_Y, COMBO_END};
+const uint16_t PROGMEM combo_backslash[] = {KC_Z, KC_Y, COMBO_END};
 const uint16_t PROGMEM combo_backspace[] = {KC_R, KC_T, COMBO_END};
 const uint16_t PROGMEM combo_scoot[] = {KC_A, KC_E, COMBO_END};
 const uint16_t PROGMEM combo_seal[] = {KC_B, KC_L, KC_D, KC_C, COMBO_END};
@@ -133,7 +133,7 @@ const uint16_t PROGMEM combo_copy[] = {KC_X, KC_W, COMBO_END};
 const uint16_t PROGMEM combo_alfred[] = {KC_Y, KC_H, COMBO_END};
 const uint16_t PROGMEM combo_paste[] = {KC_X, KC_M, KC_W, COMBO_END};
 const uint16_t PROGMEM combo_lbrc[] = {KC_D, KC_C, COMBO_END};
-const uint16_t PROGMEM combo_rbrc[] = {KC_C, LT(_MOUSE,KC_V), COMBO_END};
+const uint16_t PROGMEM combo_rbrc[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM combo_rprn[] = {KC_Y, KC_O, COMBO_END};
 const uint16_t PROGMEM combo_lbrn[] = {KC_O, KC_U, COMBO_END};
 const uint16_t PROGMEM combo_qstn[] = {KC_L, KC_R, COMBO_END};
@@ -142,17 +142,17 @@ const uint16_t PROGMEM combo_rbrk[] = {KC_T, KC_X, COMBO_END};
 const uint16_t PROGMEM combo_emailat[] = {LT(_NUMS, KC_P), KC_Y, COMBO_END};
 const uint16_t PROGMEM combo_carrot[] = {KC_D, KC_R, COMBO_END};
 const uint16_t PROGMEM combo_lbrk[] = {KC_T, KC_W, COMBO_END};
-const uint16_t PROGMEM combo_underscore[] = {KC_W, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_underscore[] = {KC_W, LT(_MOUSE,KC_J), COMBO_END};
 const uint16_t PROGMEM combo_equal[] = {KC_F, KC_COMM, COMBO_END};
-const uint16_t PROGMEM combo_ast[] = {KC_K, KC_H, COMBO_END};
+const uint16_t PROGMEM combo_ast[] = {LT(_MOUSE,KC_K), KC_H, COMBO_END};
 const uint16_t PROGMEM combo_hash[] = {KC_U, KC_E, COMBO_END};
 const uint16_t PROGMEM combo_fslash[] = {KC_H, KC_F, COMBO_END};
-const uint16_t PROGMEM combo_plus[] = {KC_K, KC_F, COMBO_END};
+const uint16_t PROGMEM combo_plus[] = {LT(_MOUSE,KC_K), KC_F, COMBO_END};
 const uint16_t PROGMEM combo_percent[] = {KC_E, KC_DOT, COMBO_END};
 const uint16_t PROGMEM combo_semicolon[] = {KC_V, LT(_NAV, KC_G), COMBO_END};
 const uint16_t PROGMEM combo_tilda[] = {KC_D, KC_S, COMBO_END};
 const uint16_t PROGMEM combo_dash[] = {KC_H, KC_A, KC_E, COMBO_END};
-const uint16_t PROGMEM combo_pipe[] = {LT(_NAV, KC_G), KC_J, COMBO_END};
+const uint16_t PROGMEM combo_pipe[] = {LT(_NAV, KC_G), LT(_MOUSE,KC_J), COMBO_END};
 const uint16_t PROGMEM combo_dollar[] = {KC_C, LT(_NAV, KC_G), COMBO_END};
 const uint16_t PROGMEM combo_meh[] = {KC_C, KC_S, COMBO_END};
 const uint16_t PROGMEM combo_lmouse[] = {KC_R, KC_T, KC_S, COMBO_END};
@@ -300,9 +300,9 @@ uint16_t get_combo_term(uint16_t combo_index, combo_t *combo) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ALPHA] = LAYOUT_voyager(
     DUAL_FUNC_0,            KC_1,               NAVIGATOR_TURBO,    TOGGLE_SCROLL,      KC_MS_BTN1,         KC_5,                                         KC_MS_BTN1,         KC_7,               KC_8,               KC_9,               KC_0,               KC_MINUS,
-    CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               LT(_MOUSE,KC_V),                                         LT(_MOUSE,KC_Z),    KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
+    CW_TOGG,                CW_TOGG,            KC_L,               KC_D,               KC_C,               KC_V,                                                    KC_Z,               KC_Y,               KC_O,               KC_U,               KC_LCTL,            KC_BSLS,
     KC_B,                   KC_N,               KC_R,               KC_T,               KC_S,               LT(_NAV, KC_G),                               LT(_NUMS, KC_P),    KC_H,               KC_A,               KC_E,               KC_I,               KC_RIGHT_CTRL,
-    NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               KC_J,                                         KC_K,               KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            OSM(MOD_LCTL),
+    NAVIGATOR_AIM,          TD(DANCE_0),        KC_X,               KC_M,               KC_W,               LT(_MOUSE,KC_J),                              LT(_MOUSE,KC_K),    KC_F,               KC_COMM,            KC_DOT,             KC_QUOT,            OSM(MOD_LCTL),
                                                 OSM(MOD_LSFT),      KC_LGUI,                                                                          LT(_HELPER, KC_SPACE),           KC_SPACE
   ),
 
@@ -334,7 +334,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS,                KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,                                      KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,            KC_TRNS,
     KC_TRNS,                KC_MS_UP,           KC_MS_WH_UP,        KC_MS_WH_LEFT,      KC_MS_WH_DOWN,      KC_MS_WH_RIGHT,                               KC_TRNS,            KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
     KC_TRNS,                KC_MS_LEFT,         KC_MS_DOWN,         KC_MS_UP,           KC_MS_RIGHT,        KC_TRNS,                                      KC_TRNS,            KC_MS_LEFT,         KC_MS_DOWN,         KC_MS_UP,           KC_MS_RIGHT,        KC_TRNS,
-    KC_TRNS,                KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,                                   KC_MS_BTN1,         KC_MS_BTN2,         KC_MS_BTN3,         KC_MS_BTN4,         KC_MS_BTN5,         KC_TRNS,
+    KC_TRNS,                KC_MS_BTN1,         KC_MS_WH_UP,        KC_MS_WH_DOWN,      KC_MS_BTN1,         KC_TRNS,                                      KC_TRNS,            KC_MS_BTN1,         KC_MS_WH_UP,        KC_MS_WH_DOWN,      KC_MS_BTN5,         KC_TRNS,
                                                 KC_TRNS,            KC_TRNS,                                                                          KC_TRNS,            KC_TRNS
   ),
 
